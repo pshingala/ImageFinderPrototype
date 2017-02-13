@@ -44,10 +44,10 @@ public class GettyImage extends BaseSyncableProviderModel{
     }
 
 
-    // dbflow needs a primary key lets assume id is unique string.
+    // dbflow needs a primary key. lets assume id is unique and string.
     @PrimaryKey
     @Expose
-    @Column
+    @Column(name = "id")
     private String id;
 
     @Column
@@ -59,11 +59,12 @@ public class GettyImage extends BaseSyncableProviderModel{
     private String caption;
 
 
-    // we save imageUrl however this field is not present in the api.
+    // we save thumbnail image url however this field is not present in the api.
+    // check method save()
     @Column
     private String imageUrl;
 
-    // we do not care about other sizes then thumbnail hence we do not need to save them.
+    // we do not care about other properties than url and other sizes hence we do not need to save them.
     @Expose
     private List<Image> display_sizes;
 

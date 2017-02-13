@@ -7,14 +7,14 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 
-public class StorageEventService {
+public class DBEventService {
 
-    public StorageEventService() {
+    public DBEventService() {
     }
 
     // DB jobs in queue mode (background mode executes in sequence)
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void writeOrder(SaveImageDataEvent event) {
+    public void saveImageData(SaveImageDataEvent event) {
         try {
             event.image.save();
         } catch (Exception e) {

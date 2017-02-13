@@ -1,8 +1,8 @@
 package net.damroo.imagefinderprototype.service;
 
 import net.damroo.imagefinderprototype.retrofit.GettyRestAdapter;
-import net.damroo.imagefinderprototype.service.image.ImageDBService;
-import net.damroo.imagefinderprototype.service.image.OrderNetworkService;
+import net.damroo.imagefinderprototype.service.image.DBService;
+import net.damroo.imagefinderprototype.service.image.NetworkService;
 
 import javax.inject.Singleton;
 
@@ -23,24 +23,24 @@ public class DaggerModule {
     @Provides
     @Singleton
     NetworkEventService provideNetworkEventService() {
-        StorageEventService dbService = new StorageEventService();
-        OrderNetworkService service = new OrderNetworkService(new GettyRestAdapter(), new ImageDBService(dbService));
+        DBEventService dbService = new DBEventService();
+        NetworkService service = new NetworkService(new GettyRestAdapter(), new DBService(dbService));
         return new NetworkEventService(service);
     }
 
 
     @Provides
     @Singleton
-    StorageEventService provideDBEventServiceBac() {
-        return new StorageEventService();
+    DBEventService provideDBEventServiceBac() {
+        return new DBEventService();
     }
 
 
     @Provides
     @Singleton
-    OrderNetworkService provideOrderNetworkService() {
-        StorageEventService dbService = new StorageEventService();
-        return new OrderNetworkService(new GettyRestAdapter(), new ImageDBService(dbService));
+    NetworkService provideOrderNetworkService() {
+        DBEventService dbService = new DBEventService();
+        return new NetworkService(new GettyRestAdapter(), new DBService(dbService));
     }
 
 }

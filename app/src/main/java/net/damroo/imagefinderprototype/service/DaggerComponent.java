@@ -1,8 +1,8 @@
 package net.damroo.imagefinderprototype.service;
 
 import net.damroo.imagefinderprototype.activity.ListViewActivity;
-import net.damroo.imagefinderprototype.service.image.ImageDBService;
-import net.damroo.imagefinderprototype.service.image.OrderNetworkService;
+import net.damroo.imagefinderprototype.service.image.DBService;
+import net.damroo.imagefinderprototype.service.image.NetworkService;
 
 import javax.inject.Singleton;
 
@@ -17,8 +17,8 @@ public interface DaggerComponent {
 
     void inject(ListViewActivity listViewActivity);
 
-    void inject(OrderNetworkService orderNetworkService);
+    void inject(NetworkService networkService);
 
-    void inject(ImageDBService imageDBService);
+    void inject(DBService DBService);
 
 }

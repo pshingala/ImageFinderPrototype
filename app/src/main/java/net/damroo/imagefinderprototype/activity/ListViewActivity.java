@@ -23,10 +23,10 @@ import net.damroo.imagefinderprototype.R;
 import net.damroo.imagefinderprototype.events.UIEventType;
 import net.damroo.imagefinderprototype.events.ImageSearchEvent;
 import net.damroo.imagefinderprototype.events.UIChangeEvent;
+import net.damroo.imagefinderprototype.service.DBEventService;
 import net.damroo.imagefinderprototype.service.DaggerComponent;
 import net.damroo.imagefinderprototype.service.DaggerDaggerComponent;
 import net.damroo.imagefinderprototype.service.NetworkEventService;
-import net.damroo.imagefinderprototype.service.StorageEventService;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -45,7 +45,7 @@ public class ListViewActivity extends AppCompatActivity implements LoaderManager
     public NetworkEventService nes;
 
     @Inject
-    public StorageEventService des;
+    public DBEventService des;
 
     // changing in PROJECTION means change in setViewBinder and SimpleCursorAdapter
     static String[] PROJECTION = new String[]{"id as _id", "caption", "title", "imageUrl"}; // select(PROJECTION)
@@ -69,7 +69,7 @@ public class ListViewActivity extends AppCompatActivity implements LoaderManager
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_list);
+        setContentView(R.layout.activity_image_list);
 
         // dagger - register for di
         network = DaggerDaggerComponent.create();
@@ -82,16 +82,15 @@ public class ListViewActivity extends AppCompatActivity implements LoaderManager
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-
         final ListView listView = (ListView) findViewById(R.id.orderList);
 
         // please notice that some values/styles are set in view binder
-        String[] fromColumns = {"id", "title", "imageUrl"};
+        String[] fromColumns = {"_id", "title", "imageUrl"};
         int[] toViews = {R.id.orderNumberOrderList, R.id.displayPriceOrderList, R.id.orderImageOrderList}; // The TextView in simple_list_item_1
 
         // Create an empty adapter, pass null for the cursor, then update it in onLoadFinished()
         simpleCursorAdapter = new SimpleCursorAdapter(this,
-                R.layout.content_orderlist, null,
+                R.layout.content_imagelist, null,
                 fromColumns, toViews, 0);
 
         simpleCursorAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
@@ -99,7 +98,7 @@ public class ListViewActivity extends AppCompatActivity implements LoaderManager
             public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
                 if (view.getId() == R.id.orderNumberOrderList) {
                     TextView tv = (TextView) view;
-                    tv.setText(cursor.getString(cursor.getColumnIndex("id")));
+                    tv.setText(cursor.getString(cursor.getColumnIndex("_id")));
                     return true;
                 }
                 if (view.getId() == R.id.displayPriceOrderList) {
@@ -158,7 +157,8 @@ public class ListViewActivity extends AppCompatActivity implements LoaderManager
                         && this.currentScrollState == SCROLL_STATE_IDLE) {
 
                     Log.d("loading ... ", "new images");
-                    EventBus.getDefault().post(new ImageSearchEvent("downloadOldOrders"));
+                    // TODO send ImageSearch event with next page number
+                    // EventBus.getDefault().post(new ImageSearchEvent(""));
                 }
             }
 
@@ -197,8 +197,13 @@ public class ListViewActivity extends AppCompatActivity implements LoaderManager
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void stopLoadingAnimation(UIChangeEvent event) {
         if (event.type.equals(UIEventType.STOP_ANIMATION)) {
-            // TODO do something!
+            // TODO remove animation!
         }
+    }
+
+    public void searchImages(View view){
+        // TODO add animation
+        EventBus.getDefault().post(new ImageSearchEvent("mobile", 1));
     }
 
 }

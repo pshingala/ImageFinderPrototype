@@ -1,29 +1,29 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style query="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item query="colorPrimary">@color/colorPrimary</item>
-        <item query="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item query="colorAccent">@color/colorAccent</item>
-        <item query="windowActionBar">false</item>
-        <item query="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
-    <style query="AppTheme.NoActionBar">
-        <item query="windowActionBar">false</item>
-        <item query="windowNoTitle">true</item>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
-    <style query="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style query="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style query="MineCustomTabText" parent="TextAppearance.Design.Tab">
-        <item query="android:textSize">18sp</item>
+    <style name="MineCustomTabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">18sp</item>
     </style>
 
-    <style query="MyAlertDialogTheme">
-        <item query="colorAccent">@color/colorAccent</item>
+    <style name="MyAlertDialogTheme">
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 </resources>
