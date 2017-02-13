@@ -1,10 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 
+def dbflow_version = "3.0.0-beta6"
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
+    dexOptions.incremental = false
+    compileOptions.incremental = false
 
     lintOptions {
         abortOnError false
@@ -49,5 +52,11 @@ dependencies {
     // glide
     compile 'com.github.bumptech.glide:glide:3.6.1'
     compile 'com.android.support:support-v4:23.1.0'
+
+    // dbflow
+    apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
+    compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
+    compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${dbflow_version}"
 
 }
