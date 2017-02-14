@@ -7,14 +7,18 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -79,14 +83,10 @@ public class ListViewActivity extends AppCompatActivity implements LoaderManager
         // clean cache
         dbEventService.removeImageData(new RemoveImageDataEvent());
 
-        // toolbar - dropdown for order filter
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarOrderList);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarImageList);
+        setSupportActionBar(toolbar);
 
-        final ListView listView = (ListView) findViewById(R.id.orderList);
+        final ListView listView = (ListView) findViewById(R.id.imageList);
 
         // please notice that some values/styles are set in view binder
         String[] fromColumns = {"_id", "title", "imageUrl"};
@@ -170,16 +170,47 @@ public class ListViewActivity extends AppCompatActivity implements LoaderManager
 
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu( Menu menu) {
+        getMenuInflater().inflate( R.menu.search_menu, menu);
+
+        final MenuItem myActionMenuItem = menu.findItem( R.id.search);
+        final SearchView searchView = (SearchView) myActionMenuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // search user input text
+                EventBus.getDefault().post(new ImageSearchEvent(query, NetworkEventType.SEARCH));
+                //Toast.makeText(ListViewActivity.this, query, Toast.LENGTH_SHORT).show();
+                if( ! searchView.isIconified()) {
+                    searchView.setIconified(true);
+                }
+                myActionMenuItem.collapseActionView();
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+        return true;
+    }
+
+
+
     // Called when a new Loader needs to be created
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(this, Uri.parse("content://net.damroo.imagefinderprototype.provider/GettyImage"),
                 PROJECTION, SELECTION, null, SORTORDER);
     }
 
+
     // Called when a previously created loader has finished loading
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         simpleCursorAdapter.swapCursor(data);
     }
+
 
     // Called when a previously created loader is reset, making the data unavailable
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -189,13 +220,12 @@ public class ListViewActivity extends AppCompatActivity implements LoaderManager
 
     @Override
     public void onStop() {
-
         EventBus.getDefault().unregister(networkEventService);
         EventBus.getDefault().unregister(dbEventService);
         EventBus.getDefault().unregister(this);
-
         super.onStop();
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void stopLoadingAnimation(UIChangeEvent event) {
@@ -203,10 +233,6 @@ public class ListViewActivity extends AppCompatActivity implements LoaderManager
             // TODO remove animation!
         }
     }
-
-    public void searchImages(View view){
-        // TODO add animation
-        EventBus.getDefault().post(new ImageSearchEvent("mobile", NetworkEventType.SEARCH));
-    }
+    
 
 }
