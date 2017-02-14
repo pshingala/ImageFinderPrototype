@@ -22,7 +22,6 @@ public class GettyRestAdapter {
 
     public GettyRestAdapter() {
         Gson gson = new GsonBuilder()
-                // no date-format needed so far!  .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .create();
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

@@ -22,14 +22,6 @@ public class MyDataBase {
 
     public static final String BASE_CONTENT_URI = "content://";
 
-    private static Uri buildUri(String... paths){
-        Uri.Builder builder = Uri.parse(MyDataBase.BASE_CONTENT_URI + MyDataBase.AUTHORITY).buildUpon();
-        for(String path : paths){
-            builder.appendPath(path);
-        }
-        return builder.build();
-    }
-
 
     @TableEndpoint(name = GettyImage.ENDPOINT, contentProvider = MyDataBase.class)
     public static class GettyImage {

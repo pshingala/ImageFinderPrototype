@@ -1,6 +1,6 @@
 package net.damroo.imagefinderprototype.events;
 
 
-public enum NetworkEventType {
+public enum ImageSearchEventType {
    SEARCH, SCROLL
 }

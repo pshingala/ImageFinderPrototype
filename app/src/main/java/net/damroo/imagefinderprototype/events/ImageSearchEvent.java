@@ -5,11 +5,11 @@ public class ImageSearchEvent {
 
     public final String query;
 
-    public final NetworkEventType networkEventType;
+    public final ImageSearchEventType imageSearchEventType;
 
-    public ImageSearchEvent(String query, NetworkEventType networkEventType) {
+    public ImageSearchEvent(String query, ImageSearchEventType imageSearchEventType) {
         this.query = query;
-        this.networkEventType = networkEventType;
+        this.imageSearchEventType = imageSearchEventType;
     }
 
 }

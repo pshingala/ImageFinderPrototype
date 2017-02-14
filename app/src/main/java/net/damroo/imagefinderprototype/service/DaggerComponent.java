@@ -1,7 +1,6 @@
 package net.damroo.imagefinderprototype.service;
 
 import net.damroo.imagefinderprototype.activity.ListViewActivity;
-import net.damroo.imagefinderprototype.service.image.DBService;
 import net.damroo.imagefinderprototype.service.image.NetworkService;
 
 import javax.inject.Singleton;
