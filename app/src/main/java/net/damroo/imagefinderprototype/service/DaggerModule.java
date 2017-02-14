@@ -23,8 +23,7 @@ public class DaggerModule {
     @Provides
     @Singleton
     NetworkEventService provideNetworkEventService() {
-        DBEventService dbService = new DBEventService();
-        NetworkService service = new NetworkService(new GettyRestAdapter(), new DBService(dbService));
+        NetworkService service = new NetworkService(new GettyRestAdapter(), new DBService());
         return new NetworkEventService(service);
     }
 
@@ -32,15 +31,14 @@ public class DaggerModule {
     @Provides
     @Singleton
     DBEventService provideDBEventServiceBac() {
-        return new DBEventService();
+        return new DBEventService(new DBService());
     }
 
 
     @Provides
     @Singleton
     NetworkService provideOrderNetworkService() {
-        DBEventService dbService = new DBEventService();
-        return new NetworkService(new GettyRestAdapter(), new DBService(dbService));
+        return new NetworkService(new GettyRestAdapter(), new DBService());
     }
 
 }

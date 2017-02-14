@@ -20,6 +20,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import net.damroo.imagefinderprototype.R;
+import net.damroo.imagefinderprototype.events.NetworkEventType;
+import net.damroo.imagefinderprototype.events.RemoveImageDataEvent;
 import net.damroo.imagefinderprototype.events.UIEventType;
 import net.damroo.imagefinderprototype.events.ImageSearchEvent;
 import net.damroo.imagefinderprototype.events.UIChangeEvent;
@@ -37,15 +39,14 @@ import javax.inject.Inject;
 
 public class ListViewActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private DaggerComponent network;
+
     private SimpleCursorAdapter simpleCursorAdapter;
-    private Toolbar toolbar;
 
     @Inject
-    public NetworkEventService nes;
+    public NetworkEventService networkEventService;
 
     @Inject
-    public DBEventService des;
+    public DBEventService dbEventService;
 
     // changing in PROJECTION means change in setViewBinder and SimpleCursorAdapter
     static String[] PROJECTION = new String[]{"id as _id", "caption", "title", "imageUrl"}; // select(PROJECTION)
@@ -61,8 +62,8 @@ public class ListViewActivity extends AppCompatActivity implements LoaderManager
 
         super.onStart();
         EventBus.getDefault().register(this);
-        EventBus.getDefault().register(nes);
-        EventBus.getDefault().register(des);
+        EventBus.getDefault().register(networkEventService);
+        EventBus.getDefault().register(dbEventService);
 
     }
 
@@ -72,11 +73,14 @@ public class ListViewActivity extends AppCompatActivity implements LoaderManager
         setContentView(R.layout.activity_image_list);
 
         // dagger - register for di
-        network = DaggerDaggerComponent.create();
-        network.inject(this);
+        DaggerComponent daggerComponent = DaggerDaggerComponent.create();
+        daggerComponent.inject(this);
+
+        // clean cache
+        dbEventService.removeImageData(new RemoveImageDataEvent());
 
         // toolbar - dropdown for order filter
-        toolbar = (Toolbar) findViewById(R.id.toolbarOrderList);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarOrderList);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -157,8 +161,7 @@ public class ListViewActivity extends AppCompatActivity implements LoaderManager
                         && this.currentScrollState == SCROLL_STATE_IDLE) {
 
                     Log.d("loading ... ", "new images");
-                    // TODO send ImageSearch event with next page number
-                    // EventBus.getDefault().post(new ImageSearchEvent(""));
+                    EventBus.getDefault().post(new ImageSearchEvent("mobile", NetworkEventType.SCROLL));
                 }
             }
 
@@ -187,8 +190,8 @@ public class ListViewActivity extends AppCompatActivity implements LoaderManager
     @Override
     public void onStop() {
 
-        EventBus.getDefault().unregister(nes);
-        EventBus.getDefault().unregister(des);
+        EventBus.getDefault().unregister(networkEventService);
+        EventBus.getDefault().unregister(dbEventService);
         EventBus.getDefault().unregister(this);
 
         super.onStop();
@@ -203,7 +206,7 @@ public class ListViewActivity extends AppCompatActivity implements LoaderManager
 
     public void searchImages(View view){
         // TODO add animation
-        EventBus.getDefault().post(new ImageSearchEvent("mobile", 1));
+        EventBus.getDefault().post(new ImageSearchEvent("mobile", NetworkEventType.SEARCH));
     }
 
 }

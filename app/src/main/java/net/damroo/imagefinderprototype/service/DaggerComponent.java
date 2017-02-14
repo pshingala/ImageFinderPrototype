@@ -19,6 +19,6 @@ public interface DaggerComponent {
 
     void inject(NetworkService networkService);
 
-    void inject(DBService DBService);
+    void inject(DBEventService dbEventService);
 
 }

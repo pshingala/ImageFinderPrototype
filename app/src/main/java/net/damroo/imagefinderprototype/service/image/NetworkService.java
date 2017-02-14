@@ -2,6 +2,7 @@ package net.damroo.imagefinderprototype.service.image;
 
 import net.damroo.imagefinderprototype.database.model.GettyImage;
 import net.damroo.imagefinderprototype.events.ImageSearchEvent;
+import net.damroo.imagefinderprototype.events.NetworkEventType;
 import net.damroo.imagefinderprototype.events.SaveImageDataEvent;
 import net.damroo.imagefinderprototype.retrofit.GettyRestAdapter;
 import net.damroo.imagefinderprototype.retrofit.ImagesPage;
@@ -26,7 +27,8 @@ public class NetworkService {
     private GettyRestAdapter rest;
 
     private DBService DBService;
-    private final String RESULTS_PER_PAGE = "100";
+
+    private final int RESULTS_PER_PAGE = 100;
 
 
     @Inject
@@ -43,14 +45,17 @@ public class NetworkService {
 
     public boolean getImages(ImageSearchEvent event) {
 
-        // remove everything from cache
-        DBService.removeImages();
+        // remove everything from cache for new search
+        if(event.networkEventType == NetworkEventType.SEARCH)
+            DBService.removeImages();
+        // get page number for the api call
+        long page = event.networkEventType == NetworkEventType.SEARCH ? 1 : DBService.getNextPageNumber(RESULTS_PER_PAGE);
 
         // set parameters
         Map<String, String> params = new HashMap<>();
         params.put("phrase", event.query);
-        params.put("page", String.valueOf(event.page));
-        params.put("page_size", RESULTS_PER_PAGE);
+        params.put("page", String.valueOf(page));
+        params.put("page_size", String.valueOf(RESULTS_PER_PAGE));
 
         return downloadImagesPage(params);
 
